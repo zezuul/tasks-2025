@@ -2,7 +2,7 @@ import requests
 
 
 TOKEN = ...                         # Your token here
-URL = "149.156.182.9:6060/task-3/submit"
+URL = "149.156.182.9:6060/task-5/submit"
 agent_file = "./agent.py"
 weights_file = './example_weights.pt'
 weights_file_2 = './example_weights_2.pt'
