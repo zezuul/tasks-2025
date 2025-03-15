@@ -1,6 +1,7 @@
 from typing import Tuple
 import torch
 from torch.utils.data import Dataset
+from torchvision import transforms
 
 
 class TaskDataset(Dataset):
@@ -22,3 +23,11 @@ class TaskDataset(Dataset):
 
     def __len__(self):
         return len(self.ids)
+    
+t = transforms.Compose(
+    [
+        transforms.Resize((32, 32)),
+        transforms.Lambda(lambda x: x.convert("RGB")),
+        transforms.ToTensor(),
+    ]
+)
