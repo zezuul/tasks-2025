@@ -81,7 +81,7 @@ def simulate_game(
                 "player_2": action_2
             }
         )
-        save_training_data_separately(obs["player_1"], action_1, reward, path)
+        save_training_data_separately(obs["player_2"], action_2, reward, path)
 
         if render_mode is not None:
             for event in pygame.event.get():
