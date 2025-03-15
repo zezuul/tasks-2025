@@ -1,1 +1,1 @@
-from task_5.octospace.octospace.envs.octospace import OctoSpaceEnv
+from octospace.envs.octospace import OctoSpaceEnv

@@ -7,20 +7,20 @@ import numpy as np
 from gymnasium.core import RenderFrame
 
 
-from task_5.octospace.octospace.envs.game_config import (MAX_RESOURCES, MAP_MAX_VALUE,
+from octospace.envs.game_config import (MAX_RESOURCES, MAP_MAX_VALUE,
                                         WINDOW_SIZE, MAX_SHIPS, BOARD_SIZE, VERSION, GUI_SIZE, BORDER_WIDTH,
                                         BASE_SHIP_SPEED, SHIP_COST,
                                         PLAYER_1_ORIGIN, PLAYER_2_ORIGIN, N_PLANETS, FIRING_COOLDOWN, MOVE_COOLDOWN,
                                         RESOURCE_PRODUCTION_DIVISOR)
-from task_5.octospace.octospace.envs.map_assets import BORDER, BORDER_SCORE, generate_players_assets
-from task_5.octospace.octospace.envs.map_generation import _generate_map, _generate_state_map, _add_base_planet_occupation, _reset_planets_occupation
-from task_5.octospace.octospace.envs.rendering import (_render_planets, _render_planet_occupation, _render_ongoing_planet_capture, _render_players,
+from octospace.envs.map_assets import BORDER, BORDER_SCORE, generate_players_assets
+from octospace.envs.map_generation import _generate_map, _generate_state_map, _add_base_planet_occupation, _reset_planets_occupation
+from octospace.envs.rendering import (_render_planets, _render_planet_occupation, _render_ongoing_planet_capture, _render_players,
                        _render_ships, _render_turn, _render_background, _render_team_names, _render_resources,
                        _render_effects, _render_vision_debug, _render_score)
-from task_5.octospace.octospace.envs.game_logic import (_ship_firing, _ship_movement, _ship_construction, _occupation_progress,
+from octospace.envs.game_logic import (_ship_firing, _ship_movement, _ship_construction, _occupation_progress,
                         _change_ownership_of_planets, _ship_land_interaction, _decrease_cooldowns, _handle_ship_death,
                         _handle_visibility, _add_planet_visibility, _check_victory_conditions)
-from task_5.octospace.octospace.envs.sound import setup_music_loop, get_new_track
+from octospace.envs.sound import setup_music_loop, get_new_track
 
 
 class OctoSpaceEnv(gym.Env):

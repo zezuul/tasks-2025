@@ -1,12 +1,12 @@
 import numpy as np
 
-from task_5.octospace.octospace.envs.game_config import (PLANETS_DIAMETER, PLANETS_OFFSET, PLANETS_DISTANCE,
+from octospace.envs.game_config import (PLANETS_DIAMETER, PLANETS_OFFSET, PLANETS_DISTANCE,
                          RF_ID_TO_CODING, RF_COORDS, FRAC_OF_ASTEROID_AREA, FRAC_OF_IONIZED_AREA, BOARD_SIZE,
                          PLAYER_1_ORIGIN, PLAYER_2_ORIGIN, N_PLANETS)
-from task_5.octospace.octospace.envs.map_assets import (IONIZED_FIELDS, LAND, ASTEROIDS)
-from task_5.octospace.octospace.envs.schemes import (STARTING_PLANET_SCHEME, EMPTY_PLANET_SCHEME, ASTEROID_ID_TO_SCHEME, ASTEROID_AREA, PLANET_MASK)
+from octospace.envs.map_assets import (IONIZED_FIELDS, LAND, ASTEROIDS)
+from octospace.envs.schemes import (STARTING_PLANET_SCHEME, EMPTY_PLANET_SCHEME, ASTEROID_ID_TO_SCHEME, ASTEROID_AREA, PLANET_MASK)
 from scipy.spatial.distance import cdist
-from task_5.octospace.octospace.envs.utils import NoSpaceOnMapException
+from octospace.envs.utils import NoSpaceOnMapException
 
 
 def _generate_map():

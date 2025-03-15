@@ -1,11 +1,11 @@
 import numpy as np
 
-from task_5.octospace.octospace.envs.game_config import (MAX_SHIP_FIRE_RANGE, SHIP_DAMAGE, BASE_SHIP_SPEED,
+from octospace.envs.game_config import (MAX_SHIP_FIRE_RANGE, SHIP_DAMAGE, BASE_SHIP_SPEED,
                          IONIZED_FIELD_SPEED_FACTOR, BOARD_SIZE, MOVEMENT_DIRECTIONS, SHIP_COST, PLAYER_1_ORIGIN, \
     PLAYER_2_ORIGIN, OCCUPATION_SPEED, SHIP_HEALING_SPEED, SHIP_OCCUPATION_RANGE, FIRING_COOLDOWN, MOVE_COOLDOWN,
                          ASTEROID_DAMAGE, VISION_RANGE, VISION_ADD_MASK)
-from task_5.octospace.octospace.envs.schemes import PLANET_MASK
-from task_5.octospace.octospace.envs.sound import play_space_jump_sound, play_capture_sound, play_ship_explosion_sound, play_shoot_sound
+from octospace.envs.schemes import PLANET_MASK
+from octospace.envs.sound import play_space_jump_sound, play_capture_sound, play_ship_explosion_sound, play_shoot_sound
 
 
 player_1_ships_next_id = 1

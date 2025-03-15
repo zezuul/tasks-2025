@@ -46,7 +46,9 @@ TEAMS = [
     "Świta Znachora",
     "wiz.dev",
     "404 Brain Not Found",
-    "test"
+    "test",
+    "Team 1",
+    "Team 2"
 ]
 
 TEAMS_ABBREVIATIONS = [
@@ -95,5 +97,7 @@ TEAMS_ABBREVIATIONS = [
     "ŚZ",
     "wiz.dev",
     "404BNF",
-    "test"
+    "test",
+    "Team 1",
+    "Team 2"
 ]

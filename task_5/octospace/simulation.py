@@ -2,10 +2,10 @@ import gymnasium as gym
 import numpy as np
 import os
 
-import task_5.octospace.octospace
+import octospace
 import pygame
 
-from task_5.octospace.dummy_agent import Agent
+from dummy_agent import Agent
 
 
 def setup_agent(agent: Agent, player_id: int):
