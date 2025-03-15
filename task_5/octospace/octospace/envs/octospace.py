@@ -235,10 +235,16 @@ class OctoSpaceEnv(gym.Env):
             }
 
         # Under usual circumstances one of the players is the winner or none of them yet
-        return {
-            "player_1": 1 if self.victorious_player[0] else 0,
-            "player_2": 1 if self.victorious_player[1] else 0
-        }
+        if self.player_1_id == self.player_1_id_original:
+            return {
+                "player_1": 1 if self.victorious_player[0] else 0,
+                "player_2": 1 if self.victorious_player[1] else 0
+            }
+        else:
+            return {
+                "player_1": 1 if self.victorious_player[1] else 0,
+                "player_2": 1 if self.victorious_player[0] else 0
+            }
 
     def _get_obs(self):
         player_1_map = self._map.copy()
@@ -472,6 +478,9 @@ class OctoSpaceEnv(gym.Env):
             self._player_1_score += 0.5
             self._player_2_score += 0.5
         if any(self.victorious_player):
+            print(self.victorious_player)
+            print(self._player_1_score)
+            print(self._player_2_score)
             if self.player_1_id == self.player_1_id_original:
                 self._player_1_score += int(self.victorious_player[0]) / sum(self.victorious_player)
                 self._player_2_score += int(self.victorious_player[1]) / sum(self.victorious_player)
