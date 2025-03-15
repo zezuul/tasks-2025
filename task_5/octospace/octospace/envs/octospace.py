@@ -66,7 +66,6 @@ class OctoSpaceEnv(gym.Env):
                  player_2_id: int,
                  render_mode: Optional[str] = None,
                  max_steps: int = 1000,
-                 debug: bool = False,
                  turn_on_music: bool = False,
                  volume: float = 0.25,
                  seed: Optional[int] = None
@@ -85,7 +84,7 @@ class OctoSpaceEnv(gym.Env):
         self.volume = volume
         self.seed = seed
         self.render_mode = render_mode
-        self.debug = debug
+        self.debug = False
 
         self.observation_space = spaces.Dict({
             player: spaces.Dict({

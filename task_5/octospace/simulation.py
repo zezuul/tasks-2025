@@ -27,7 +27,7 @@ def simulate_game(
         gym.logger.min_level = 40
 
     env = gym.make('OctoSpace-v0', player_1_id=player_1_id, player_2_id=player_2_id, max_steps=1000,
-                   render_mode=render_mode, debug=False, turn_on_music=turn_on_music, volume=0.1)
+                   render_mode=render_mode, turn_on_music=turn_on_music, volume=0.1)
     obs, info = env.reset()
 
     agent_1 = player_1_agent_class()
