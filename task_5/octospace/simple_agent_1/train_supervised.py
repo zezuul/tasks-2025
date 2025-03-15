@@ -5,7 +5,7 @@ import torch
 from torch import optim, nn
 from torch.utils.data import DataLoader
 from dataset import create_dataloader  # Zakładamy, że funkcja ta zwraca DataLoader z naszym datasetem
-from simple_agent import SimpleAgent
+from simple_agent_1.simple_agent import SimpleAgent
 from data_balancing import compute_class_weights
 
 
