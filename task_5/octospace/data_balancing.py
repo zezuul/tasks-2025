@@ -64,7 +64,7 @@ def compute_class_weights(dataset):
         weight = total_construction / (num_construction_classes * count)
         construction_weights.append(weight)
 
-    return (torch.tensor(action_weights, dtype=torch.float32),
-            torch.tensor(direction_weights, dtype=torch.float32),
-            torch.tensor(speed_weights, dtype=torch.float32),
-            torch.tensor(construction_weights, dtype=torch.float32))
+    return (torch.tensor(action_weights, dtype=torch.float32, device="cuda"),
+            torch.tensor(direction_weights, dtype=torch.float32, device="cuda"),
+            torch.tensor(speed_weights, dtype=torch.float32, device="cuda"),
+            torch.tensor(construction_weights, dtype=torch.float32, device="cuda"))

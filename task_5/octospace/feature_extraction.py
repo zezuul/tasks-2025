@@ -21,7 +21,7 @@ def get_relative_direction(ship_x, ship_y, planet_x, planet_y):
         return 1 if dy >= 0 else 3
 
 
-def extract_features(obs, max_ships=10, max_planets=8):
+def extract_features(obs, max_ships=10, max_planets=8, device='cpu'):
     """
     Przetwarza pojedynczą obserwację (dict) na wektor cech.
 
@@ -72,4 +72,4 @@ def extract_features(obs, max_ships=10, max_planets=8):
             planet_features.extend([0, -1])
 
     features = ship_features + [resources_val] + planet_features
-    return torch.tensor(features, dtype=torch.float32)
+    return torch.tensor(features, dtype=torch.float32, device=device)

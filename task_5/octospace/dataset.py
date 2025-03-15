@@ -23,16 +23,23 @@ class OctoSpaceDataset(Dataset):
         self.actions = actions
         self.max_ships = max_ships
         self.max_planets = max_planets
+        self.device = torch.device("cuda")
+        # Inicjalizujemy cache – będzie to słownik, w którym kluczem jest indeks, a wartością wynik __getitem__
+        self.cache = {}
 
     def __len__(self):
         return len(self.observations)
 
     def __getitem__(self, idx):
+        # Jeśli wynik dla danego indeksu jest już w cache, zwracamy go
+        if idx in self.cache:
+            return self.cache[idx]
+
         obs = self.observations[idx]
         act = self.actions[idx]
 
-        # Wyciągamy cechy przy użyciu funkcji extract_features (zdefiniowanej w feature_extraction.py)
-        features_tensor = extract_features(obs, max_ships=self.max_ships, max_planets=self.max_planets)
+        # Wyciągamy cechy przy użyciu funkcji extract_features (przekazujemy także device)
+        features_tensor = extract_features(obs, max_ships=self.max_ships, max_planets=self.max_planets, device=self.device)
 
         # Obsługa akcji – lista "ships_actions" może być pusta
         ship_actions = act.get("ships_actions", [])
@@ -43,16 +50,18 @@ class OctoSpaceDataset(Dataset):
 
         # act0: [ship_id, action_type, direction, speed]
         action_type = act0[1]  # 0: move, 1: fire
-        direction = act0[2]  # 0-3
+        direction = act0[2]    # 0-3
         speed_label = (act0[3] - 1) if action_type == 0 else 0
-        # Etykieta dla akcji: tensor [action_type, direction, speed_label]
-        labels = torch.tensor([action_type, direction, speed_label], dtype=torch.long)
+        labels = torch.tensor([action_type, direction, speed_label], dtype=torch.long, device=self.device)
 
         # Wyciągamy etykietę konstrukcji z akcji (domyślnie 0, jeśli nie podano)
         construction_val = act.get("construction", 0)
-        construction_tensor = torch.tensor(construction_val, dtype=torch.long)
+        construction_tensor = torch.tensor(construction_val, dtype=torch.long, device=self.device)
 
-        return features_tensor, labels, construction_tensor
+        data = (features_tensor, labels, construction_tensor)
+        # Zapisujemy wynik w cache
+        self.cache[idx] = data
+        return data
 
 
 def create_dataloader(base_path, batch_size=4):
