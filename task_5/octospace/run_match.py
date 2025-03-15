@@ -41,8 +41,8 @@ def run_match(
     agent_2 = SourceFileLoader('agent_2', agent_2_path).load_module()
 
     score = simulate_game(player_1_id=player_1_id, player_2_id=player_2_id, player_1_agent_class=agent_1.Agent,
-                                player_2_agent_class=agent_2.Agent, n_games=n_matches, render_mode=render_mode, verbose=False,
-                                  turn_on_music=turn_on_music)
+                            player_2_agent_class=agent_2.Agent, n_games=n_matches,
+                            render_mode=render_mode, verbose=False, turn_on_music=turn_on_music)
 
     print(f'{TEAMS[player_1_id]} vs {TEAMS[player_2_id]}: {score}')
 
@@ -53,3 +53,12 @@ if __name__ == '__main__':
 
     run_match(n_matches=args.n_matches, agent_1_path=args.path_to_agent_1, agent_2_path=args.path_to_agent_2,
               verbose=args.verbose, render_mode=args.render_mode, turn_on_music=args.turn_on_music)
+
+    """
+    Example execution:
+        python run_match.py ../agent.py ../agent.py --n_matches=1 --render_mode=human --turn_on_music=True
+        
+    !IMPORTANT!
+    If it happens, that you have a smaller screen in your computer and the game window doesn't render correctly,
+    go to the octospace/envs/game_config.py and change the WINDOW_SIZE value (around 
+    """

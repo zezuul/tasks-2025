@@ -211,7 +211,7 @@ def _render_resources(
             resource_surface.blit(RESOURCE_FIELDS_BARS[rf_id][bar_state_id], (30, 100 + 100 * rf_id))
             resource_surface.blit(resource_text, (42, 120 + rf_id * 100))
 
-        window.blit(resource_surface, (player * (WINDOW_SIZE + GUI_SIZE + 2*BORDER_WIDTH - 30), player * 500))
+        window.blit(resource_surface, (player * (WINDOW_SIZE + GUI_SIZE + 2*BORDER_WIDTH - 30), player * (WINDOW_SIZE - 500)))
 
 
 def _render_score(

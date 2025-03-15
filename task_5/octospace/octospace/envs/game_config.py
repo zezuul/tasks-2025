@@ -1,6 +1,10 @@
 import numpy as np
 VERSION = '1.0.1'
 
+# You may change this, to adjust the window into your screen
+WINDOW_SIZE = 1024
+
+
 # Gameplay settings
 MAX_RESOURCES = 1000
 RESOURCE_PRODUCTION_DIVISOR = 4
@@ -34,7 +38,6 @@ PLAYER_1_ORIGIN = np.array([PLAYER_1_LOCATION, PLAYER_1_LOCATION], dtype=int)
 PLAYER_2_ORIGIN = np.array([PLAYER_2_LOCATION, PLAYER_2_LOCATION], dtype=int)
 
 # Rendering settings
-WINDOW_SIZE = 1024
 BORDER_WIDTH = 75
 GUI_SIZE = 110
 TILE_SIZE = WINDOW_SIZE // BOARD_SIZE
