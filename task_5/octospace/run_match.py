@@ -59,6 +59,6 @@ if __name__ == '__main__':
         python run_match.py ../agent.py ../agent.py --n_matches=1 --render_mode=human --turn_on_music=True
         
     !IMPORTANT!
-    If it happens, that you have a smaller screen in your computer and the game window doesn't render correctly,
-    go to the octospace/envs/game_config.py and change the WINDOW_SIZE value (around 
+    If it happens, that you have a smaller screen on your computer and the game window doesn't render correctly,
+    go to the octospace/envs/game_config.py and change the WINDOW_SIZE value (around 800 should be fine).
     """
