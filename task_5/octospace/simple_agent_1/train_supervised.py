@@ -64,5 +64,5 @@ def train_agent(base_path, num_epochs=10, batch_size=4, learning_rate=1e-3):
 
 
 if __name__ == '__main__':
-    base_path = "saves_merge"  # Folder z danymi
+    base_path = "saves_choco"  # Folder z danymi
     trained_model = train_agent(base_path, num_epochs=1000, batch_size=4, learning_rate=1e-3)
