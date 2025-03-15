@@ -1,12 +1,11 @@
 import pygame
-
-
+# python run_match.py keyboard_agent.py dummy_agent.py --n_matches=1 --render_mode=human --turn_on_music=True
 class Agent:
-    # def __init__(self):
-        # Inicjalizacja Pygame oraz utworzenie okna (jeśli już nie zostało utworzone)
-        # pygame.init()
-        # self.screen = pygame.display.set_mode((400, 300))
-        # pygame.display.set_caption("Sterowanie Agentem")
+    def __init__(self):
+        # Inicjalizacja Pygame oraz utworzenie okna
+        pygame.init()
+        self.screen = pygame.display.set_mode((400, 300))
+        pygame.display.set_caption("Sterowanie Agentem")
 
     def get_action(self, obs: dict) -> dict:
         """
@@ -45,38 +44,29 @@ class Agent:
                     # Jeśli naciśnięto klawisz ruchu
                     if event.key in key_direction and direction is None:
                         direction = key_direction[event.key]
-                        print(
-                            f"Wybrany kierunek: {direction} ({'góra' if direction == 3 else 'dół' if direction == 1 else 'lewo' if direction == 2 else 'prawo'})")
+                        print(f"Wybrany kierunek: {direction} ({'góra' if direction == 3 else 'dół' if direction == 1 else 'lewo' if direction == 2 else 'prawo'})")
                     # Jeśli naciśnięto klawisz numeryczny
                     elif event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
-                                       pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
+                                         pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
                         try:
-                            # event.unicode zwraca tekstową reprezentację klawisza
                             num = int(event.unicode)
-                            # interpretujemy 0 jako 10
                             construction = 10 if num == 0 else num
                             print(f"Ustawiono konstrukcję: {construction} statków")
                         except Exception as e:
                             print("Błąd przy odczycie klawisza numerycznego:", e)
             pygame.time.delay(10)
-            # Jeśli kierunek został już wybrany, możemy zakończyć nasłuchiwanie
             if direction is not None:
                 break
 
-        # Ustaw domyślny kierunek (prawo) jeśli żaden nie został wybrany
         if direction is None:
             direction = 0
             print("Nie wybrano kierunku. Ustawiam domyślnie: prawo")
 
-        # Przypisz tę samą akcję dla wszystkich statków
+        # Przekazujemy akcje jako listy [ship_id, action_type, direction, speed]
         for ship in allied_ships:
             ship_id = ship[0]
-            ships_actions.append({
-                "ship_id": ship_id,
-                "action_type": 0,  # 0 - ruch
-                "direction": direction,
-                "speed": 1  # domyślna prędkość
-            })
+            # action_type 0 oznacza ruch, speed ustawiamy na 1
+            ships_actions.append([ship_id, 0, direction, 1])
 
         return {
             "ships_actions": ships_actions,
@@ -84,13 +74,10 @@ class Agent:
         }
 
     def load(self, abs_path: str):
-        # Agent interaktywny nie korzysta z wag
         pass
 
     def eval(self):
-        # Agent interaktywny działa tylko w trybie interaktywnym
         pass
 
     def to(self, device):
-        # Agent interaktywny nie korzysta z GPU
         pass
