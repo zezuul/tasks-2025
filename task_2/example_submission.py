@@ -40,6 +40,25 @@ class TaskDataset(Dataset):
         return len(self.ids)
 
 
+def generate_random_image():
+    """Generates a random 32x32 RGB image and returns it as bytes."""
+    random_pixels = np.random.randint(0, 256, (32, 32, 3), dtype=np.uint8)
+    img = Image.fromarray(random_pixels, 'RGB')
+
+    # Save to a BytesIO buffer
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format="PNG")
+    return img_bytes.getvalue()
+
+
+def quering_random():
+    files = [("files", ("image2.png", generate_random_image(), "image/png")) for _ in range(1000)]
+    response = requests.post(
+        "url",
+        headers={"token": "token"},
+        files=files
+    )
+
 
 def quering_example():
     dataset = torch.load(...)                   # Path to ModelStealingPub.pt
@@ -105,6 +124,7 @@ def submitting_example():
 
     response = requests.post(SUBMIT_URL, headers={"token": TOKEN}, files={"onnx_model": open(path, "rb")})
     print(response.status_code, response.text)
+
 
 
 if __name__ == '__main__':
