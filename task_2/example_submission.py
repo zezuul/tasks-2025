@@ -58,6 +58,11 @@ def quering_random():
         headers={"token": TOKEN},
         files=files
     )
+    if response.status_code == 200:
+        buffer = io.BytesIO(response.content)
+        np_array = np.load(buffer)
+        print(np_array.shape)
+        print(np_array)
 
 def reset_example():
     response = requests.post(
