@@ -11,8 +11,8 @@ import pygame
 
 from dummy_agent import Agent
 import datetime
+from data import save_training_data_separately
 
-from octospace.data import save_training_data_separately
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -81,7 +81,7 @@ def simulate_game(
                 "player_2": action_2
             }
         )
-        save_training_data_separately(obs["player_1"], action_1, reward, path)
+        save_training_data_separately(obs["player_2"], action_2, reward, path)
 
         if render_mode is not None:
             for event in pygame.event.get():
