@@ -28,9 +28,10 @@ def get_new_track():
 
 
 def setup_music_loop(volume: float = 0.25):
-    pygame.mixer.init()
-    pygame.mixer.music.set_volume(volume)
-    get_new_track()
+    # pygame.mixer.init()
+    # pygame.mixer.music.set_volume(volume)
+    # get_new_track()
+    pass
 
 
 def play_shoot_sound(volume: float):

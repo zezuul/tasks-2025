@@ -6,7 +6,6 @@ import pygame
 import numpy as np
 from gymnasium.core import RenderFrame
 
-
 from octospace.envs.game_config import (MAX_RESOURCES, MAP_MAX_VALUE,
                                         WINDOW_SIZE, MAX_SHIPS, BOARD_SIZE, VERSION, GUI_SIZE, BORDER_WIDTH,
                                         BASE_SHIP_SPEED, SHIP_COST,
@@ -339,8 +338,9 @@ class OctoSpaceEnv(gym.Env):
     ) -> Tuple[dict, dict, bool, bool, dict]:
         self.turn += 1
         # If the song has ended, play another one
-        if self._turn_on_music and not pygame.mixer.music.get_busy():
-            get_new_track()
+        if self._turn_on_music:
+            if not pygame.mixer.music.get_busy():
+                get_new_track()
 
         # Decrease cooldowns
         _decrease_cooldowns(player_1_ships=self._player_1_ships, player_2_ships=self._player_2_ships)
