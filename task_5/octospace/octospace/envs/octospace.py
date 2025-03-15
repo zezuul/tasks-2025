@@ -77,6 +77,8 @@ class OctoSpaceEnv(gym.Env):
         self._turn_on_music = turn_on_music
         self.player_1_id = player_1_id
         self.player_2_id = player_2_id
+        self.player_1_id_original = player_1_id
+        self.player_2_id_original = player_2_id
 
         self._players_rendering_order = sorted([self.player_1_id, self.player_2_id])
 
@@ -470,8 +472,12 @@ class OctoSpaceEnv(gym.Env):
             self._player_1_score += 0.5
             self._player_2_score += 0.5
         if any(self.victorious_player):
-            self._player_1_score += int(self.victorious_player[0]) / sum(self.victorious_player)
-            self._player_2_score += int(self.victorious_player[1]) / sum(self.victorious_player)
+            if self.player_1_id == self.player_1_id_original:
+                self._player_1_score += int(self.victorious_player[0]) / sum(self.victorious_player)
+                self._player_2_score += int(self.victorious_player[1]) / sum(self.victorious_player)
+            else:
+                self._player_1_score += int(self.victorious_player[1]) / sum(self.victorious_player)
+                self._player_2_score += int(self.victorious_player[0]) / sum(self.victorious_player)
 
     def _change_sides(self):
         self.player_1_id, self.player_2_id = self.player_2_id, self.player_1_id
