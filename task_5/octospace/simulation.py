@@ -56,7 +56,7 @@ def simulate_game(
     current_time = datetime.datetime.now()
 
     # Sformatuj datę i godzinę w odpowiedni sposób
-    base_path = Path(current_time.strftime("%Y-%m-%d_%H-%M-%S"))
+    base_path = Path("saves") / current_time.strftime("%Y-%m-%d_%H-%M-%S")
     base_path.mkdir(parents=True, exist_ok=False)
     step = 0
 
