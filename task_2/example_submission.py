@@ -54,7 +54,7 @@ def quering_example():
         image_data.append(img_base64)
 
     payload = json.dumps(image_data)
-    response = requests.get(QUERY_URL, headers={"token": TOKEN}, files={"file": payload})
+    response = requests.post(QUERY_URL, headers={"token": TOKEN}, files={"file": payload})
     if response.status_code == 200:
         representation = response.json()["representations"]
     else:
