@@ -1,10 +1,10 @@
 import torch
 from feature_extraction import extract_features
-from simple_agent import SimpleAgent
+from simple_agent_1.simple_agent import SimpleAgent
 
 
 class Agent:
-    def __init__(self):
+    def __init__(self, player_id):
         self.device = torch.device("cpu")
         self.model = SimpleAgent(input_dim=55, hidden_dim=32)
         self.model.to(self.device)
@@ -17,6 +17,7 @@ class Agent:
         """
         features = extract_features(obs, max_ships=10, max_planets=8)
         features = features.unsqueeze(0)  # dodajemy wymiar batch
+        features = features.to(self.device)
         self.model.eval()
         with torch.no_grad():
             at_logits, dir_logits, spd_logits, constr_logits = self.model(features)

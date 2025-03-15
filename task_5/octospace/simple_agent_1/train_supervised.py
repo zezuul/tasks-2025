@@ -21,7 +21,7 @@ def train_agent(base_path, num_epochs=10, batch_size=4, learning_rate=1e-3):
     print("  Speed weights:", speed_weights)
     print("  Construction weights:", construction_weights)
 
-    model = SimpleAgent(input_dim=55, hidden_dim=32)
+    model = SimpleAgent(input_dim=55, hidden_dim=128)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     loss_action_fn = nn.CrossEntropyLoss(weight=action_weights)
