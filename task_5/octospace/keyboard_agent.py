@@ -1,23 +1,28 @@
 import pygame
-
-
+# python run_match.py keyboard_agent.py dummy_agent.py --n_matches=1 --render_mode=human --turn_on_music=True
 class Agent:
     def __init__(self):
+        # Inicjalizacja Pygame oraz utworzenie okna
         pygame.init()
         self.screen = pygame.display.set_mode((400, 300))
-        pygame.display.set_caption("Sterowanie Agentem - Domyślny ruch / ostrzał")
+        pygame.display.set_caption("Sterowanie Agentem")
 
     def get_action(self, obs: dict) -> dict:
+        """
+        Agent sterowany za pomocą Pygame.
+          - Ruch statków: WASD (W - góra, A - lewo, S - dół, D - prawo)
+          - Konstrukcja statków: klawisze numeryczne 1-9, a 0 oznacza 10 statków
+
+        Metoda czeka maksymalnie 3 sekundy na naciśnięcie klawisza ruchu.
+        Jeśli użytkownik w tym czasie naciśnie także klawisz numeryczny, zapamiętuje wartość konstrukcji.
+        """
         ships_actions = []
         allied_ships = obs.get("allied_ships", [])
 
-        # Domyślny tryb: ruch (0)
-        action_type = 0  # 0 - ruch, 1 - ostrzał
         direction = None
-        speed = None
         construction = 0
 
-        # Mapowanie klawiszy kierunkowych (WASD)
+        # Mapowanie klawiszy ruchu na kierunki:
         # 0 - prawo, 1 - dół, 2 - lewo, 3 - góra
         key_direction = {
             pygame.K_w: 3,
@@ -26,60 +31,54 @@ class Agent:
             pygame.K_d: 0
         }
 
-        # Informacja dla użytkownika
-        print("Domyślny tryb: Ruch (prędkość = 3).")
-        print("Jeśli chcesz wykonać ostrzał, naciśnij F przed wyborem kierunku.")
-        print("Wybierz kierunek: WASD (W - góra, A - lewo, S - dół, D - prawo)")
-
-        # Pętla wyboru kierunku – jednocześnie sprawdzamy, czy został naciśnięty F
-        direction_selected = False
-        while not direction_selected:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_f:
-                        # Zmiana trybu na ostrzał
-                        action_type = 1
-                        print("Tryb ostrzału wybrany.")
-                    elif event.key in key_direction:
-                        direction = key_direction[event.key]
-                        dir_str = {3: "góra", 1: "dół", 2: "lewo", 0: "prawo"}[direction]
-                        print(f"Wybrano kierunek: {direction} ({dir_str})")
-                        direction_selected = True
-            pygame.time.delay(10)
-
-        # Ustawienie prędkości w zależności od trybu
-        if action_type == 0:
-            speed = 3  # dla ruchu prędkość jest 3 (domyślna)
-            print("Tryb ruchu: prędkość ustawiona na 3.")
-        else:
-            speed = 0  # dla ostrzału prędkość nie jest istotna
-            print("Tryb ostrzału: prędkość ustawiona na 0.")
-
-        # --- Ustawienie konstrukcji statków ---
-        print("Wybierz liczbę statków do konstrukcji (klawisze 1-9, 0 oznacza 10) (domyślnie 0):")
+        print("Sterowanie:")
+        print("  - Użyj klawiszy WASD do wyboru kierunku ruchu.")
+        print("  - Użyj klawiszy numerycznych (1-9, 0 oznacza 10) do ustawienia liczby statków do konstrukcji.")
+        print("Czekam na naciśnięcie klawisza ruchu (maks. 3 sekundy)...")
+        mode = 0
         start_ticks = pygame.time.get_ticks()
-        while pygame.time.get_ticks() - start_ticks < 2000:
+        # Nasłuchuj zdarzeń przez maksymalnie 3000 ms
+        while pygame.time.get_ticks() - start_ticks < 3000:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
-                                     pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
-                        try:
-                            num = int(event.unicode)
-                            construction = 10 if num == 0 else num
-                            print(f"Wybrano konstrukcję: {construction} statków")
-                        except Exception as e:
-                            print("Błąd przy odczycie konstrukcji:", e)
-            pygame.time.delay(10)
 
-        # Przypisanie akcji dla każdego statku – zależnie od trybu
+                if event.type == pygame.KEYDOWN:
+                    if event.key in [pygame.K_f]:
+                        print("F aktywne")
+                        mode = 1
+                    else:
+                        # Jeśli naciśnięto klawisz ruchu
+                        if event.key in key_direction and direction is None:
+                            direction = key_direction[event.key]
+                            print(f"Wybrany kierunek: {direction} ({'góra' if direction == 3 else 'dół' if direction == 1 else 'lewo' if direction == 2 else 'prawo'})")
+                        # Jeśli naciśnięto klawisz numeryczny
+                        elif event.key in [pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
+                                             pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
+                            try:
+                                num = int(event.unicode)
+                                construction = 10 if num == 0 else num
+                                print(f"Ustawiono konstrukcję: {construction} statków")
+                            except Exception as e:
+                                print("Błąd przy odczycie klawisza numerycznego:", e)
+
+            pygame.time.delay(10)
+            if direction is not None:
+                break
+
+        if direction is None:
+            direction = 0
+            print("Nie wybrano kierunku. Ustawiam domyślnie: prawo")
+
+        # Przekazujemy akcje jako listy [ship_id, action_type, direction, speed]
+
         for ship in allied_ships:
             ship_id = ship[0]
-            if action_type == 0:
-                # Dla ruchu zwracamy krotkę czteroelementową
-                ships_actions.append((ship_id, action_type, direction, speed))
+            # action_type 0 oznacza ruch, speed ustawiamy na 3
+            if mode == 0:
+                ships_actions.append([ship_id, 0, direction, 3])
             else:
-                # Dla ostrzału zwracamy krotkę trzyelementową
-                ships_actions.append((ship_id, action_type, direction))
+                print("HELLLLLLEP")
+                ships_actions.append([ship_id, 1, direction])
+
 
         return {
             "ships_actions": ships_actions,
@@ -94,4 +93,3 @@ class Agent:
 
     def to(self, device):
         pass
-
