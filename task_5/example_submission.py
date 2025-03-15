@@ -4,6 +4,8 @@ import requests
 TOKEN = ...                         # Your token here
 URL = "149.156.182.9:6060/task-5/submit"
 agent_file = "./agent.py"
+
+# These are just some random .pt files as an example
 weights_file = './example_weights/example_weights.pt'
 weights_file_2 = './example_weights/example_weights_2.pt'
 
