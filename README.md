@@ -19,3 +19,6 @@ As an example, you can use an empty Agent class in agent.py:
 ```
 python run_match.py ../agent.py ../agent.py --render_mode=human --turn_on_music=True
 ```
+
+## Troubleshooting
+If you'd notice any strange behavior or error, please contact the Infrastructure Team on Discord or on-site.
