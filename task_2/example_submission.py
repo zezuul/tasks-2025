@@ -54,11 +54,23 @@ def generate_random_image():
 def quering_random():
     files = [("files", ("image2.png", generate_random_image(), "image/png")) for _ in range(1000)]
     response = requests.post(
-        "url",
-        headers={"token": "token"},
+        QUERY_URL,
+        headers={"token": TOKEN},
         files=files
     )
+    if response.status_code == 200:
+        buffer = io.BytesIO(response.content)
+        np_array = np.load(buffer)
+        print(np_array.shape)
+        print(np_array)
 
+def reset_example():
+    response = requests.post(
+        RESET_URL,
+        headers={"token": TOKEN}
+    )
+
+    print(response.text)
 
 def quering_example():
     dataset = torch.load(...)                   # Path to ModelStealingPub.pt
