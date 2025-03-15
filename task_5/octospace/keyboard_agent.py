@@ -37,8 +37,8 @@ class Agent:
         print("Czekam na naciśnięcie klawisza ruchu (maks. 3 sekundy)...")
 
         start_ticks = pygame.time.get_ticks()
-        # Nasłuchuj zdarzeń przez maksymalnie 3000 ms
-        while pygame.time.get_ticks() - start_ticks < 3000:
+        # Nasłuchuj zdarzeń przez maksymalnie 30000 ms
+        while pygame.time.get_ticks() - start_ticks < 30000:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     # Jeśli naciśnięto klawisz ruchu
