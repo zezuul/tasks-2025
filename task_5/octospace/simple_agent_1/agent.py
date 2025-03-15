@@ -6,7 +6,7 @@ from simple_agent_1.simple_agent import SimpleAgent
 class Agent:
     def __init__(self, player_id):
         self.device = torch.device("cpu")
-        self.model = SimpleAgent(input_dim=55, hidden_dim=32)
+        self.model = SimpleAgent(input_dim=55, hidden_dim=128)
         self.model.to(self.device)
 
     def get_action(self, obs: dict) -> dict:

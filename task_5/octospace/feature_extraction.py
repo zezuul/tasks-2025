@@ -1,7 +1,7 @@
 import torch
 
 
-def extract_features(obs, max_ships=10, max_planets=8):
+def extract_features(obs, max_ships=10, max_planets=8, device='cpu'):
     """
     Przetwarza pojedynczą obserwację (dict) na wektor cech.
 
@@ -39,4 +39,4 @@ def extract_features(obs, max_ships=10, max_planets=8):
             planet_features.extend([0, 0, -1])
 
     features = ship_features + [resources_val] + planet_features
-    return torch.tensor(features, dtype=torch.float32)
+    return torch.tensor(features, dtype=torch.float32, device=device)

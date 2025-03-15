@@ -1,13 +1,14 @@
-import torch
-from pathlib import Path
 import torch.nn as nn
-from feature_extraction import extract_features
+import torch
+from config import load_config
+
+config = load_config("simple_agent_1/config.json")
 
 
 class SimpleAgent(nn.Module):
-    def __init__(self, input_dim=55, hidden_dim=32):
+    def __init__(self, input_dim=config["input_dim"], hidden_dim=config["hidden_dim"]):
         """
-        Model przyjmuje wektor cech o wymiarze 55.
+        Model przyjmuje wektor cech o wymiarze input_dim.
         Wyjścia:
           - head_action: 2 klasy (0: move, 1: fire)
           - head_direction: 4 klasy (kierunki: 0 - right, 1 - down, 2 - left, 3 - up)
