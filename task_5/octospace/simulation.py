@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import gymnasium as gym
 import numpy as np
 import os
@@ -8,7 +10,9 @@ import octospace
 import pygame
 
 from dummy_agent import Agent
+import datetime
 
+from octospace.data import save_training_data_separately
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -47,6 +51,15 @@ def simulate_game(
     score = np.array([0, 0], dtype=float)
     curr_round = 0
 
+
+    # Pobierz bieżącą datę i godzinę
+    current_time = datetime.datetime.now()
+
+    # Sformatuj datę i godzinę w odpowiedni sposób
+    base_path = Path(current_time.strftime("%Y-%m-%d_%H-%M-%S"))
+    base_path.mkdir(parents=True, exist_ok=False)
+    step = 0
+
     while curr_round / 2 != n_games:
         if terminated or sum(reward.values()) != 0:
             curr_round += 1
@@ -60,17 +73,22 @@ def simulate_game(
         action_1 = agent_1.get_action(obs["player_1"])
         action_2 = agent_2.get_action(obs["player_2"])
 
+        path = base_path / f"{step}"
+
         obs, reward, terminated, _, info = env.step(
             {
                 "player_1": action_1,
                 "player_2": action_2
             }
         )
+        save_training_data_separately(obs["player_1"], action_1, reward, path)
 
         if render_mode is not None:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return -1
+
+        step += 1
 
     return score
 
