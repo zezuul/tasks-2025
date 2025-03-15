@@ -25,16 +25,19 @@ def extract_features(obs, max_ships=10, max_planets=8):
     """
     Przetwarza pojedynczą obserwację (dict) na wektor cech.
 
-    Dla statków: dla maksymalnie max_ships statków pobieramy [pos_x, pos_y, hp] (max_ships×3 wartości).
-      Jeśli statków jest mniej, uzupełniamy [0, 0, 0].
-    Dla zasobów: jeśli "resources" jest listą, pobieramy pierwszy element, inaczej wartość bezpośrednio.
-    Dla planet: dla maksymalnie max_planets planet obliczamy:
-      [relative_direction, occupation_progress]
-    gdzie relative_direction to dyskretny kierunek (0: right, 1: down, 2: left, 3: up) obliczony względem pierwszego statku.
-    Jeśli planet jest mniej, uzupełniamy [0, -1].
+    Argumenty:
+      obs: dict zawierający klucze "allied_ships", "resources", "planets_occupation", itd.
+      max_ships: maksymalna liczba statków do uwzględnienia (domyślnie 10)
+      max_planets: maksymalna liczba planet do uwzględnienia (domyślnie 8)
 
-    Łącznie: (max_ships×3) + 1 + (max_planets×2) cech.
-    Dla max_ships=10 i max_planets=8 → 10×3 + 1 + 8×2 = 30 + 1 + 16 = 47 cech.
+    Wektor cech budowany jest jako:
+      - Statki: dla każdego z maksymalnie 10 statków pobieramy [pos_x, pos_y, hp] (10×3 = 30 wartości).
+        Jeśli statków jest mniej, uzupełniamy [0, 0, 0].
+      - Zasoby: jeśli "resources" jest listą, pobieramy pierwszy element, w przeciwnym razie wartość bezpośrednio (1 wartość).
+      - Planety: dla maksymalnie 8 planet pobieramy [planet_x, planet_y, occupation_progress] (8×3 = 24 wartości).
+        Jeśli planet jest mniej, uzupełniamy [0, 0, -1].
+
+    Łącznie: 30 + 1 + 24 = 55 cech.
     """
     # Ekstrakcja cech statków
     allied_ships = obs.get("allied_ships", [])
@@ -63,11 +66,8 @@ def extract_features(obs, max_ships=10, max_planets=8):
     planet_features = []
     for i in range(max_planets):
         if i < len(planets):
-            # Każda planeta powinna być listą: [planet_x, planet_y, occupation_progress]
-            planet_info = planets[i]
-            planet_x, planet_y, occ = planet_info
-            rel_dir = get_relative_direction(ship_x, ship_y, planet_x, planet_y)
-            planet_features.extend([rel_dir, occ])
+            # Każda planeta to lista: [planet_x, planet_y, occupation_progress]
+            planet_features.extend(planets[i])
         else:
             planet_features.extend([0, -1])
 
