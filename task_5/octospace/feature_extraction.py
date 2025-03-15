@@ -5,19 +5,15 @@ def extract_features(obs, max_ships=10, max_planets=8):
     """
     Przetwarza pojedynczą obserwację (dict) na wektor cech.
 
-    Argumenty:
-      obs: dict zawierający klucze "allied_ships", "resources", "planets_occupation", itd.
-      max_ships: maksymalna liczba statków do uwzględnienia (domyślnie 10)
-      max_planets: maksymalna liczba planet do uwzględnienia (domyślnie 8)
-
     Wektor cech budowany jest jako:
-      - Statki: dla każdego z maksymalnie 10 statków pobieramy [pos_x, pos_y, hp] (10×3 = 30 wartości).
+      - Statki: dla maksymalnie max_ships statków pobieramy [pos_x, pos_y, hp] (max_ships×3 wartości).
         Jeśli statków jest mniej, uzupełniamy [0, 0, 0].
-      - Zasoby: jeśli "resources" jest listą, pobieramy pierwszy element, w przeciwnym razie wartość bezpośrednio (1 wartość).
-      - Planety: dla maksymalnie 8 planet pobieramy [planet_x, planet_y, occupation_progress] (8×3 = 24 wartości).
+      - Zasoby: jeśli "resources" jest listą, pobieramy pierwszy element, inaczej wartość.
+      - Planety: dla maksymalnie max_planets planet pobieramy [planet_x, planet_y, occupation_progress] (max_planets×3 wartości).
         Jeśli planet jest mniej, uzupełniamy [0, 0, -1].
 
-    Łącznie: 30 + 1 + 24 = 55 cech.
+    Łącznie: (max_ships×3) + 1 + (max_planets×3) cech.
+    Dla max_ships=10 i max_planets=8 → 10×3 + 1 + 8×3 = 30 + 1 + 24 = 55.
     """
     # Ekstrakcja cech statków
     allied_ships = obs.get("allied_ships", [])
@@ -30,7 +26,7 @@ def extract_features(obs, max_ships=10, max_planets=8):
         else:
             ship_features.extend([0, 0, 0])
 
-    # Ekstrakcja zasobów – jeśli "resources" jest listą, bierzemy pierwszy element
+    # Ekstrakcja zasobów
     resources_val = obs["resources"][0]
 
     # Ekstrakcja cech planet
@@ -38,7 +34,6 @@ def extract_features(obs, max_ships=10, max_planets=8):
     planet_features = []
     for i in range(max_planets):
         if i < len(planets):
-            # Każda planeta to lista: [planet_x, planet_y, occupation_progress]
             planet_features.extend(planets[i])
         else:
             planet_features.extend([0, 0, -1])
