@@ -54,7 +54,7 @@ def train_agent(base_path, num_epochs=10, batch_size=4, learning_rate=1e-3):
         if (epoch + 1) % 100 == 0:
             print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {avg_loss:.4f}")
 
-        if (epoch + 1) % 1000 == 0:
+        if (epoch + 1) % 5000 == 0:
             checkpoint_dir = Path("checkpoints")
             checkpoint_dir.mkdir(parents=True, exist_ok=True)
             checkpoint_path = checkpoint_dir / f"checkpoint_epoch_{epoch + 1}.pth"
@@ -66,5 +66,5 @@ def train_agent(base_path, num_epochs=10, batch_size=4, learning_rate=1e-3):
 
 
 if __name__ == '__main__':
-    base_path = "saves_merge"  # Folder z danymi
-    trained_model = train_agent(base_path, num_epochs=10000, batch_size=1024, learning_rate=10e-4)
+    base_path = "saves_choco"  # Folder z danymi
+    trained_model = train_agent(base_path, num_epochs=100000, batch_size=1024*128, learning_rate=10e-4)
