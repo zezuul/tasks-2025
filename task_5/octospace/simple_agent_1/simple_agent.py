@@ -28,7 +28,12 @@ class SimpleAgent(nn.Module):
 
 
 class Agent:
-    def __init__(self):
+    def __init__(self, player_id: int):
+        """
+        Args:
+            player_id: Indicates whether agent is player 0 or player 1 in game.
+        """
+        self.player_id = player_id
         self.device = torch.device("cpu")
         self.model = SimpleAgent(input_dim=55, hidden_dim=32)
         self.model.to(self.device)

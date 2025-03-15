@@ -1,8 +1,7 @@
 import pygame
 # python run_match.py keyboard_agent.py dummy_agent.py --n_matches=1 --render_mode=human --turn_on_music=True
 class Agent:
-    def __init__(self):
-        # Inicjalizacja Pygame oraz utworzenie okna
+    def __init__(self, player_id: int):
         pygame.init()
         self.screen = pygame.display.set_mode((400, 300))
         pygame.display.set_caption("Sterowanie Agentem")

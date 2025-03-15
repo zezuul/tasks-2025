@@ -55,5 +55,5 @@ def train_agent(base_path, num_epochs=10, batch_size=4, learning_rate=1e-3):
 ###########################################
 
 if __name__ == '__main__':
-    base_path = "pierwszekrokibejbika"  # Folder z danymi
-    trained_model = train_agent(base_path, num_epochs=10000, batch_size=128, learning_rate=1e-3)
+    base_path = "saves01"  # Folder z danymi
+    trained_model = train_agent(base_path, num_epochs=10000, batch_size=256, learning_rate=1e-2)
