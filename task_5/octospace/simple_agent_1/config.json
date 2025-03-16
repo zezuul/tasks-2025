@@ -1,5 +1,5 @@
 {
-  "hidden_dim": 32,
+  "hidden_dim": 256,
   "max_ships": 10,
   "max_planets": 8,
   "input_dim": 55

@@ -11,12 +11,12 @@ class OctoSpaceDataset(Dataset):
     def __init__(self, observations, actions, max_ships=10, max_planets=8):
         """
         Założenia:
-         - Każda obserwacja (dict) zawiera klucze: "allied_ships", "resources", "planets_occupation", itd.
-           Wektor cech budowany jest przy użyciu funkcji extract_features (wymiar 55).
-         - Każda akcja (dict) zawiera:
-             "ships_actions" – lista akcji; bierzemy pierwszą akcję (format: [ship_id, action_type, direction, speed])
-             oraz "construction" – liczba statków do zbudowania (int, zakres 0-10).
-           Jeśli lista "ships_actions" jest pusta, przypisujemy domyślną akcję: [0, 0, 0, 1].
+          - Każda obserwacja (dict) zawiera: "allied_ships", "resources", "planets_occupation", itd.
+            Funkcja extract_features przetwarza obserwację na wektor cech (55 cech) przy użyciu parametru primary_idx.
+          - Każda akcja (dict) zawiera:
+              "ships_actions" – lista akcji; dla slotu statku spodziewamy się formatu [ship_id, action_type, direction, speed].
+              Jeśli dla danego slotu brak akcji, przypisujemy domyślną etykietę [0, 0, 0].
+              "construction" – globalna decyzja o budowie statków (int).
         """
         assert len(observations) == len(actions), "Liczba obserwacji musi być równa liczbie akcji."
         self.observations = observations
@@ -24,42 +24,58 @@ class OctoSpaceDataset(Dataset):
         self.max_ships = max_ships
         self.max_planets = max_planets
         self.device = torch.device("cuda")
-        # Inicjalizujemy cache – będzie to słownik, w którym kluczem jest indeks, a wartością wynik __getitem__
         self.cache = {}
 
     def __len__(self):
         return len(self.observations)
 
     def __getitem__(self, idx):
-        # Jeśli wynik dla danego indeksu jest już w cache, zwracamy go
         if idx in self.cache:
             return self.cache[idx]
 
         obs = self.observations[idx]
         act = self.actions[idx]
 
-        # Wyciągamy cechy przy użyciu funkcji extract_features (przekazujemy także device)
-        features_tensor = extract_features(obs, max_ships=self.max_ships, max_planets=self.max_planets, device=self.device)
+        allied_ships = obs.get("allied_ships", [])
+        features_list = []
+        labels_list = []  # Będzie lista tensorów o wymiarze [3] dla każdego statku
 
-        # Obsługa akcji – lista "ships_actions" może być pusta
-        ship_actions = act.get("ships_actions", [])
-        if len(ship_actions) > 0:
-            act0 = ship_actions[0]
-        else:
-            act0 = [0, 0, 0, 1]  # Domyślna akcja: [ship_id, action_type, direction, speed]
+        # Dla każdego slotu statku (od 0 do max_ships-1)
+        for i in range(self.max_ships):
+            if i < len(allied_ships):
+                # Wyciągamy cechy z perspektywy statku o indeksie i
+                features = extract_features(obs, max_ships=self.max_ships, max_planets=self.max_planets, primary_idx=i,
+                                            device=self.device)
+            else:
+                features = torch.zeros(55, dtype=torch.float32, device=self.device)
+            features_list.append(features)
 
-        # act0: [ship_id, action_type, direction, speed]
-        action_type = act0[1]  # 0: move, 1: fire
-        direction = act0[2]    # 0-3
-        speed_label = (act0[3] - 1) if action_type == 0 else 0
-        labels = torch.tensor([action_type, direction, speed_label], dtype=torch.long, device=self.device)
+            # Obsługa akcji: jeśli lista "ships_actions" zawiera akcję dla tego slotu, używamy jej,
+            # w przeciwnym razie przypisujemy domyślną etykietę [0, 0, 0] (co odpowiada: move, direction 0, speed_label 0)
+            ship_actions = act.get("ships_actions", [])
+            if i < len(ship_actions):
+                act_i = ship_actions[i]
+                # act_i to [ship_id, action_type, direction, speed]
+                action_type = act_i[1]
+                direction = act_i[2]
+                speed_label = (act_i[3] - 1) if action_type == 0 else 0
+                label = torch.tensor([action_type, direction, speed_label], dtype=torch.long, device=self.device)
+            else:
+                label = torch.tensor([0, 0, 0], dtype=torch.long, device=self.device)
+            labels_list.append(label)
 
-        # Wyciągamy etykietę konstrukcji z akcji (domyślnie 0, jeśli nie podano)
+        # Globalna etykieta konstrukcji
         construction_val = act.get("construction", 0)
         construction_tensor = torch.tensor(construction_val, dtype=torch.long, device=self.device)
 
-        data = (features_tensor, labels, construction_tensor)
-        # Zapisujemy wynik w cache
+        # Teraz zamiast zwracać tensor [max_ships, 3] dla etykiet, rozdzielamy je na trzy 1D tensory:
+        action_labels = torch.stack([lbl[0] for lbl in labels_list])  # [max_ships]
+        direction_labels = torch.stack([lbl[1] for lbl in labels_list])  # [max_ships]
+        speed_labels = torch.stack([lbl[2] for lbl in labels_list])  # [max_ships]
+
+        features_tensor = torch.stack(features_list)  # kształt: [max_ships, 55]
+        # Zwracamy tuple z etykietami, które będą gotowe do spłaszczenia w DataLoaderze (batch_size, max_ships)
+        data = (features_tensor, (action_labels, direction_labels, speed_labels, construction_tensor))
         self.cache[idx] = data
         return data
 
